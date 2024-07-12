@@ -89,8 +89,8 @@ resource "aws_secretsmanager_secret" "db_credentials" {
 resource "aws_secretsmanager_secret_version" "db_credentials_version" {
   secret_id     = aws_secretsmanager_secret.db_credentials.id
   secret_string = jsonencode({
-    db_master = "db_user"
-    password = "db_pass"
+    db_master = var.DB_USER
+    password = var.DB_PASS
   })
 }
 
@@ -103,8 +103,8 @@ resource "aws_db_instance" "default" {
   engine_version       = "8.0"
   instance_class       = "db.t3.micro"
   db_name                 = "mydb"
-  username             = data.aws_secretsmanager_secret_version.db_credentials_version.secret_string["db_master"]
-  password             = data.aws_secretsmanager_secret_version.db_credentials_version.secret_string["password"]
+  username              = var.DB_USER
+  password             = var.DB_USER
   parameter_group_name = "default.mysql8.0"
   skip_final_snapshot  = true
 
